@@ -36,50 +36,46 @@ public class VerificationFormServlet extends HttpServlet{
 
         String path = getServletContext().getRealPath("base.txt");
 
-        String str = "";
-        List<String> strList = fileScannerToSrtList(path);
-        String[][] arr =listToArrayLoginPwd(strList);
+
+        String[][] arr =getDataAsArray(path);
 
         verifyUser(user,password,arr,req, resp);
 
         }
 
 
-
-        public static List<String> fileScannerToSrtList(String path) {
+        private static String[][] getDataAsArray(String path){
+            List<String> strList = fileScannerToSrtList(path);
+            return listToArrayLoginPwd(strList);
+        }
+        private static List<String> fileScannerToSrtList(String path) {
             List<String> strList = new LinkedList<>();
-            String runningMassage;
-
             try {
                 Scanner in = new Scanner(new File(path));
                 while (in.hasNext()){
                     strList.add(in.nextLine());
                 }
-                runningMassage = "file \"" + path + "\" found \n";
             } catch ( Exception ex ) {
-                runningMassage = "file \"" + path + "\" not found\n";
                 ex.printStackTrace();
             }
             return strList;
         }
-        public static String[][] listToArrayLoginPwd(List<String> strList){
+        private static String[][] listToArrayLoginPwd(List<String> strList){
             String[][] arr = new String[strList.size()][2];
-
             Pattern pattern2 = Pattern.compile("[ ,!?\\[\\]]");
             int i = 0;
             for (String str:strList){
                 String[] words = pattern2.split(str);
-
                 arr[i][0] = words[0];//0 col
                 arr[i][1] = words[1];//1 col
                 i++;
             }
             return arr;
         }
-    
-        public static void verifyUser(String user, String password,
-                                      String[][] arr,
-                                      HttpServletRequest req,HttpServletResponse resp) {
+
+        private static void verifyUser(String user, String password,
+                                       String[][] arr,
+                                       HttpServletRequest req, HttpServletResponse resp) {
 
             boolean loginOk = false;
             boolean pwdOk = false;
@@ -107,27 +103,31 @@ public class VerificationFormServlet extends HttpServlet{
                     System.out.println("new user");
                 }
             }
+            if (loginOk) {
+                if (!pwdOk) {
+                    resp.setStatus(HttpServletResponse.SC_OK);
+                    req.setAttribute("massage1", "Congratulations, " + user + ", you login!");
+                    try {
+                        req.getRequestDispatcher("/result.jsp").forward(req, resp);
+                    } catch (ServletException | IOException e) {
+                        e.printStackTrace();
+                    }
 
 
-            if (loginOk && pwdOk){
-                resp.setStatus(HttpServletResponse.SC_OK);
-                req.setAttribute("massage1","Congratulations, "+ user + ", you login!");
-                try {
-                    req.getRequestDispatcher("/result.jsp").forward(req, resp);
-                } catch (ServletException | IOException e) {
-                    e.printStackTrace();
+
+
+                    
+                } else {
+                    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    req.setAttribute("massage1", user + ", password is not correct! ");
+                    try {
+                        req.getRequestDispatcher("/result.jsp").forward(req, resp);
+                    } catch (ServletException | IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
-            if (loginOk & !pwdOk){
-                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                req.setAttribute("massage1", user+", password is not correct! ");
-                try {
-                    req.getRequestDispatcher("/result.jsp").forward(req, resp);
-                } catch (ServletException | IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (!loginOk & !pwdOk){
+            else {
                 resp.setStatus(HttpServletResponse.SC_OK);
                 try {
                     req.getRequestDispatcher("/create.html").forward(req, resp);

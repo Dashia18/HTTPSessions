@@ -1,4 +1,4 @@
-package myVerificationFormServlet;
+package myHttpSessionServlet;
 
 /**
  * Created by Daria Serebryakova on 03.03.2017.
@@ -11,9 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
@@ -29,10 +27,7 @@ public class VerificationFormServlet extends HttpServlet{
         String password = (String) req.getParameter("password");
 
         String path = getServletContext().getRealPath("base.txt");
-
-
-        String[][] arr =getDataAsArray(path);
-
+        String[][] arr = getDataAsArray(path);
         verifyUser(user,password,arr,req, resp);
 
 

@@ -1,4 +1,4 @@
-package myVerificationFormServlet;
+package myHttpSessionServlet;
 
 /**
  * Created by Daria Serebryakova on 06.03.2017.

@@ -23,6 +23,10 @@
     <div class="box-with-shadow">
         <p id = "grey-text"> ${massage1}</p>
         <p id = "grey-text"> ${massage2}</p>
+        <ul>
+            <li class = "list"><a href="login.html">Log in with HttpSession</a></li>
+            <li class = "list"><a href="loginCookie.html">Log in with Cookie</a></li>
+        </ul>
     </div>
 </div>
 </body>

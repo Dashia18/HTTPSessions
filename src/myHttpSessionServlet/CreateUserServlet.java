@@ -18,8 +18,10 @@ public class CreateUserServlet extends HttpServlet{
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+
         String user = (String) req.getParameter("login");
         String password = (String) req.getParameter("password");
+        String remember= (String)req.getParameter("ischecked");
 
         String path = getServletContext().getRealPath("base.txt");
         String finalStr = user+" "+password;
@@ -40,8 +42,21 @@ public class CreateUserServlet extends HttpServlet{
         }
 
         HttpSession httpSession = req.getSession(true);
-        httpSession.setAttribute("user", user);
-        httpSession.setAttribute("password", password);
+        System.out.println(httpSession.getId());
+        System.out.println("httpSession.isNew() = " + httpSession.isNew());
+
+        if(null == remember) {
+            httpSession.invalidate();
+//            httpSession= req.getSession(false);
+            System.out.println("clear httpSession");
+
+        }
+        else {
+            httpSession.setAttribute("user", user);
+            httpSession.setAttribute("password", password);
+            System.out.println("httpSession.getAttribute(\"user\") "+httpSession.getAttribute("user"));
+            System.out.println("httpSession.getAttribute(\"user\")" + httpSession.getAttribute("password"));
+        }
 
         resp.setStatus(HttpServletResponse.SC_OK);
         req.setAttribute("massage1","Congratulations, "+ user + ", you create profile!");

@@ -70,9 +70,14 @@ public class CookieServlet extends HttpServlet{
     private static void verifyUser(String user, String password,
                                    String[][] arr,
                                    HttpServletRequest req, HttpServletResponse resp) {
+        String remember= (String)req.getParameter("ischecked");
+        System.out.println("remember = " + remember);
 
         Cookie[] cookies = req.getCookies();
-        if(cookies!=null ){
+        //System.out.println(cookies.length);
+
+        if(cookies!=null && cookies.length>1){
+            System.out.println("cookies is not null");
                 Map<String, String> cookiesMap= new TreeMap<String, String>();
                 for (Cookie cookie : cookies) {
                     System.out.println( cookie.getName()+" "+ cookie.getValue());
@@ -105,24 +110,26 @@ public class CookieServlet extends HttpServlet{
             if (loginOk) {
                 if (pwdOk) {
                     //login & psw ok
-                    Cookie userCookie = new Cookie("login",user);
-                    Cookie passwordCookie = new Cookie("password",password);
-//                    userCookie.setMaxAge(60*60*1);
+
+                    if("on".equals(remember)) {
+                        Cookie userCookie = new Cookie("login", user);
+                        Cookie passwordCookie = new Cookie("password", password);
+//                    userCookie.setMaxAge(60*60*0);
 //                    passwordCookie.setMaxAge(60*60*0);
                     resp.addCookie(userCookie);
                     resp.addCookie(passwordCookie);
-                    System.out.println();
+                }
 
-                    resp.setStatus(HttpServletResponse.SC_OK);
-                    req.setAttribute("massage1", "Congratulations, " +user + ", you login!");
-                    try {
-                        req.getRequestDispatcher("/result.jsp").forward(req, resp);
-                    } catch (ServletException | IOException e) {
-                        e.printStackTrace();
-                    }
+                resp.setStatus(HttpServletResponse.SC_OK);
+                req.setAttribute("massage1", "Congratulations, " + user + ", you login!");
+                try {
+                    req.getRequestDispatcher("/result.jsp").forward(req, resp);
+                } catch (ServletException | IOException e) {
+                    e.printStackTrace();
+                }
 
 
-                } else {
+            } else {
                     //login ok & pwd bad
                     resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                     req.setAttribute("massage1", user + ", password is not correct! ");
@@ -146,7 +153,17 @@ public class CookieServlet extends HttpServlet{
 
         }
 
-
+//        if(null == remember) {
+//            Cookie userCookie = new Cookie("login", user);
+//            Cookie passwordCookie = new Cookie("password", password);
+//            Cookie jSessionId = new Cookie("JSESSIONID JSESSIONID", "0");
+//                    userCookie.setMaxAge(60*60*0);
+//                    passwordCookie.setMaxAge(60*60*0);
+//                    jSessionId.setMaxAge(60*60*0);
+//            resp.addCookie(userCookie);
+//            resp.addCookie(passwordCookie);
+//            resp.addCookie(jSessionId);
+//        }
 
 
 

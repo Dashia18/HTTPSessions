@@ -74,7 +74,6 @@ public class CookieServlet extends HttpServlet{
         System.out.println("remember = " + remember);
 
         Cookie[] cookies = req.getCookies();
-        //System.out.println(cookies.length);
 
         if(cookies!=null && cookies.length>1){
             System.out.println("cookies is not null");
@@ -152,21 +151,6 @@ public class CookieServlet extends HttpServlet{
 
 
         }
-
-//        if(null == remember) {
-//            Cookie userCookie = new Cookie("login", user);
-//            Cookie passwordCookie = new Cookie("password", password);
-//            Cookie jSessionId = new Cookie("JSESSIONID JSESSIONID", "0");
-//                    userCookie.setMaxAge(60*60*0);
-//                    passwordCookie.setMaxAge(60*60*0);
-//                    jSessionId.setMaxAge(60*60*0);
-//            resp.addCookie(userCookie);
-//            resp.addCookie(passwordCookie);
-//            resp.addCookie(jSessionId);
-//        }
-
-
-
 
     }
 
